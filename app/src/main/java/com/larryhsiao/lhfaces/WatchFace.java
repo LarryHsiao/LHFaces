@@ -50,6 +50,12 @@ public class WatchFace extends CanvasWatchFaceService {
         }
 
         @Override
+        public void onAmbientModeChanged(boolean inAmbientMode) {
+            super.onAmbientModeChanged(inAmbientMode);
+            invalidate();
+        }
+
+        @Override
         public void onDraw(Canvas canvas, Rect bounds) {
             canvas.drawRect(0,
                 0,
@@ -57,9 +63,11 @@ public class WatchFace extends CanvasWatchFaceService {
                 bounds.height(),
                 backgroundPaint);
             Calendar calendar = Calendar.getInstance();
-            drawSecond(calendar.get(Calendar.SECOND), canvas, bounds);
             drawMinute(calendar.get(Calendar.MINUTE), canvas, bounds);
             drawHour(calendar.get(Calendar.HOUR), canvas, bounds);
+            if (!isInAmbientMode()) {
+                drawSecond(calendar.get(Calendar.SECOND), canvas, bounds);
+            }
         }
 
         private void drawMinute(int minute, Canvas canvas, Rect bounds) {
@@ -69,7 +77,7 @@ public class WatchFace extends CanvasWatchFaceService {
                 bounds.centerX(),
                 bounds.centerY(),
                 bounds.centerX(),
-                bounds.centerY() - (bounds.width() / 4f),
+                bounds.centerY() - (bounds.width() * 0.5f *0.8f),
                 minutePaint
             );
             canvas.rotate(-degrees, bounds.centerX(), bounds.centerY());
@@ -82,11 +90,12 @@ public class WatchFace extends CanvasWatchFaceService {
                 bounds.centerX(),
                 bounds.centerY(),
                 bounds.centerX(),
-                bounds.centerY() - (bounds.width() / 8f),
-               secondPaint
+                bounds.centerY() - (bounds.width() * 0.5f * 0.85f),
+                secondPaint
             );
             canvas.rotate(-degrees, bounds.centerX(), bounds.centerY());
         }
+
         private void drawHour(int hour, Canvas canvas, Rect bounds) {
             final float degrees = 360 * (hour / 12f);
             canvas.rotate(degrees, bounds.centerX(), bounds.centerY());
@@ -94,8 +103,8 @@ public class WatchFace extends CanvasWatchFaceService {
                 bounds.centerX(),
                 bounds.centerY(),
                 bounds.centerX(),
-                bounds.centerY() - (bounds.width() / 8f),
-               hourPaint
+                bounds.centerY() - (bounds.width() *0.5f *0.5f),
+                hourPaint
             );
             canvas.rotate(-degrees, bounds.centerX(), bounds.centerY());
         }
