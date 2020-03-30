@@ -1,47 +1,75 @@
 package com.larryhsiao.lhfaces;
 
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.support.wearable.watchface.CanvasWatchFaceService;
+import android.view.SurfaceHolder;
+import com.larryhsiao.lhfaces.config.SP;
+import com.larryhsiao.lhfaces.config.SecondColor;
+import com.silverhetch.aura.storage.SPCeres;
 
 import java.util.Calendar;
 
 public class WatchFace extends CanvasWatchFaceService {
     private final Engine engine = new Engine();
 
-    private final Handler main = new Handler();
-    private final Runnable secondUpdate = new Runnable() {
-        @Override
-        public void run() {
-            engine.invalidate();
-            main.postDelayed(this, 1000);
-        }
-    };
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        main.postDelayed(secondUpdate, 1000);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        main.removeCallbacks(secondUpdate);
-    }
-
     @Override
     public Engine onCreateEngine() {
         return engine;
     }
 
-    private class Engine extends CanvasWatchFaceService.Engine {
+    private class Engine extends CanvasWatchFaceService.Engine implements
+        SharedPreferences.OnSharedPreferenceChangeListener {
+        private final Handler main = new Handler();
+        private SharedPreferences pref;
         private final Paint backgroundPaint = new BackgroundPaint().value();
-        private final Paint secondPaint = new SecondPaint().value();
+        private Paint secondPaint;
         private final Paint minutePaint = new MinutePaint().value();
         private final Paint hourPaint = new HourPaint().value();
+        private final Runnable secondUpdate = new Runnable() {
+            @Override
+            public void run() {
+                engine.invalidate();
+                main.postDelayed(this, 1000);
+            }
+        };
+
+        @Override
+        public void onCreate(SurfaceHolder holder) {
+            super.onCreate(holder);
+            main.postDelayed(secondUpdate, 1000);
+            pref = new SP(getApplicationContext()).value();
+            pref.registerOnSharedPreferenceChangeListener(this);
+            secondPaint = new SecondPaint(
+                new SecondColor(
+                    new SPCeres(pref)
+                )
+            ).value();
+        }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            main.removeCallbacks(secondUpdate);
+            pref.unregisterOnSharedPreferenceChangeListener(this);
+        }
+
+        @Override
+        public void onSharedPreferenceChanged(
+            SharedPreferences sharedPreferences, String key) {
+            initPaints();
+        }
+
+        private void initPaints() {
+            secondPaint = new SecondPaint(
+                new SecondColor(
+                    new SPCeres(pref)
+                )
+            ).value();
+        }
 
         @Override
         public void onTimeTick() {
@@ -77,7 +105,7 @@ public class WatchFace extends CanvasWatchFaceService {
                 bounds.centerX(),
                 bounds.centerY(),
                 bounds.centerX(),
-                bounds.centerY() - (bounds.width() * 0.5f *0.8f),
+                bounds.centerY() - (bounds.width() * 0.5f * 0.8f),
                 minutePaint
             );
             canvas.rotate(-degrees, bounds.centerX(), bounds.centerY());
@@ -103,7 +131,7 @@ public class WatchFace extends CanvasWatchFaceService {
                 bounds.centerX(),
                 bounds.centerY(),
                 bounds.centerX(),
-                bounds.centerY() - (bounds.width() *0.5f *0.5f),
+                bounds.centerY() - (bounds.width() * 0.5f * 0.5f),
                 hourPaint
             );
             canvas.rotate(-degrees, bounds.centerX(), bounds.centerY());

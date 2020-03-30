@@ -37,7 +37,22 @@
             <meta-data
                 android:name="android.service.wallpaper"
                 android:resource="@xml/watch_face" />
+
+            <meta-data
+                android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
+                android:value="com.larryhsiao.lhfaces.CONFIG_DIGITAL" />
         </service>
+
+        <activity
+            android:name=".ConfigActivity"
+            android:label="@string/config">
+            <intent-filter>
+                <action android:name="com.larryhsiao.lhfaces.CONFIG_DIGITAL" />
+
+                <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
     <!-- Required for complications to receive complication data and open the provider chooser. -->

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="#ff0000"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.wear.widget.WearableRecyclerView
+        android:id="@+id/watchFaceConfig_list"
+        app:boxedEdges="left|right"
+        android:layout_width="match_parent"
+        tools:itemCount="100"
+        tools:listitem="@android:layout/activity_list_item"
+        android:layout_height="match_parent" />
+
+</androidx.wear.widget.BoxInsetLayout>

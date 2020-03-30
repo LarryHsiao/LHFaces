@@ -1,5 +1,6 @@
 package com.larryhsiao.lhfaces;
 
+import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import com.silverhetch.clotho.Source;
 
@@ -13,7 +14,11 @@ public class HourPaint implements Source<Paint> {
     public Paint value() {
         final Paint paint = new Paint();
         paint.setColor(WHITE);
-        paint.setStrokeWidth(10f);
+        paint.setStrokeWidth(3f);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeJoin(Paint.Join.ROUND);
+        paint.setStrokeCap(Paint.Cap.ROUND);
+        paint.setPathEffect(new CornerPathEffect(10));
         paint.setAntiAlias(true);
         return paint;
     }

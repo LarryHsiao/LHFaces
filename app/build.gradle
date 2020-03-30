@@ -17,18 +17,29 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions{
+        exclude 'META-INF/library_release.kotlin_module'
+    }
+
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation  'org.jraf:android-wear-color-picker:2.2.2'
     implementation 'com.google.android.support:wearable:2.5.0'
+    implementation 'androidx.wear:wear:1.0.0'
     implementation 'com.silverhetch:clotho:1.17.0'
+    implementation 'com.silverhetch:aura:1.21.3'
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.palette:palette:1.0.0'
     compileOnly 'com.google.android.wearable:wearable:2.5.0'
+    testImplementation 'junit:junit:4.12'
 }
 
 apply from: 'deploy.gradle'
